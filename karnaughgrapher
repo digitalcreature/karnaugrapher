@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ -z $KG_LUABIN ]; then
+	KG_LUABIN=lua
+fi
+
+eval $KG_LUABIN main.lua
