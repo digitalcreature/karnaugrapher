@@ -23,4 +23,4 @@ local function f(km, d)
 	end
 end
 
-f(km)
+-- f(km)
