@@ -1,3 +1,7 @@
 require "truthtable"
 
-truthtable.load(io.stdin)
+local tt = truthtable.load(io.stdin)
+truthtable.display(tt, {
+	[true] = "X",
+	[false] = "-",
+})
