@@ -18,7 +18,6 @@ function truthtable.load(file)
 	for r = 0, tt.rowcount - 1 do
 		local line = lines() or string.rep("0", #tt.outputs)
 		local row = {}
-		local n = r
 		for i, input in ipairs(tt.inputs) do
 			i = #tt.inputs - i
 			local pow = math.pow(2, i + 1)
@@ -61,8 +60,7 @@ function truthtable.display(tt, s)
 		local n = r
 		for i, input in ipairs(tt.inputs) do
 			i = #tt.inputs - i
-			local pow = math.pow(2, i + 1)
-			io.write(" "..tostring(s[binary.bit(n, i)]).." ")
+			io.write(" "..tostring(s[binary.bit(n, i + 1)]).." ")
 		end
 		io.write(tostring(s.vdiv))
 		for o, output in ipairs(tt.outputs) do
@@ -70,6 +68,5 @@ function truthtable.display(tt, s)
 			io.write(" "..tostring(s[row and row[output]]).." ")
 		end
 		print()
-		tt[r] = row
 	end
 end
