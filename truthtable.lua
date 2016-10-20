@@ -1,3 +1,5 @@
+require "binary"
+
 truthtable = {}
 
 function truthtable.load(file)
@@ -60,7 +62,7 @@ function truthtable.display(tt, s)
 		for i, input in ipairs(tt.inputs) do
 			i = #tt.inputs - i
 			local pow = math.pow(2, i + 1)
-			io.write(" "..tostring(s[(n % pow) >= (pow / 2)]).." ")
+			io.write(" "..tostring(s[binary.bit(n, i)]).." ")
 		end
 		io.write(tostring(s.vdiv))
 		for o, output in ipairs(tt.outputs) do
