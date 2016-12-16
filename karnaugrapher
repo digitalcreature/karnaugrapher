@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+
+class TruthTable:
+	def __init__(self, inputs, outputs, results = None):
+		self.inputs = inputs
+		self.outputs = outputs
+		self.results = results
+		if self.results is None:
+			self.results = []
+			for m in range(0, 2 ** len(inputs)):
+				self.results.append({output: False for output in outputs})
+	@classmethod
+	def fromfile(cls, fname):
+		with open(fname) as file:
+			inputs = list(reversed(file.readline().strip()))
+			outputs = list(file.readline().strip())
+			results = []
+			for m in range(0, 2 ** len(inputs)):
+				line = file.readline().strip()
+				results.append({
+					output: (len(line) > i) and (line[i] == "1")
+						for i, output in enumerate(outputs)
+				})
+			return cls(inputs, outputs, results)
+
+class KMap:
+	def __init__(self, ttable):
+		cells = [KMap.Cell(ttable.results[m]) for m in range(0, 2 ** len(ttable.inputs))]
+		bits = {input: False for input in ttable.inputs}
+		for m, cell in enumerate(cells):
+			mask = 0b00000001
+			for input in ttable.inputs:
+				bits[input] = (mask & m) != 0
+				mask <<= 1
+			for input in ttable.inputs:
+				bits[input] = not bits[input]
+				index = 0
+				mask = 0b1
+				for bit in ttable.inputs:
+					index |= bits[bit] and mask or 0b0
+					mask <<= 1
+				cell.links[input] = cells[index]
+				bits[input] = not bits[input]
+		self.cells = cells
+
+	class Cell:
+		def __init__(self, result):
+			self.result = result
+			self.links = {}
+
+if __name__ == "__main__":
+	from sys import argv
+
+	if len(argv) > 1:
+		ttable = TruthTable.fromfile(argv[1])
+		kmap = KMap(ttable)
